@@ -30,6 +30,10 @@ impl Game {
             torpedoes: 20,
         }
     }
+
+    pub fn play(&self) {
+        println!("{self}");
+    }
 }
 
 impl Display for Game {
@@ -37,16 +41,27 @@ impl Display for Game {
         let header = (0..8)
             .collect::<Vec<i32>>()
             .iter()
-            .map(|i| format!("{i} "))
+            .map(|i| format!("{i}"))
             .collect::<Vec<String>>()
             .join(" ");
 
         writeln!(f, "  {header}")?;
 
         for r in 0..self.board.len() {
-            writeln!(f, "{} {}", (r as char) + 'A', self.board[r].join(" "))?;
+            let label = match std::char::from_u32((r as u32) + 65) {
+                None => ' ',
+                Some(c) => c,
+            };
+
+            let tiles = self.board[r]
+                .iter()
+                .map(|t| format!("{t}"))
+                .collect::<Vec<String>>()
+                .join(" ");
+
+            writeln!(f, "{label} {tiles}")?;
         }
 
-        Ok(())
+        writeln!(f, "TORPEDOES: {}", self.torpedoes)
     }
 }

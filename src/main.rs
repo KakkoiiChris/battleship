@@ -1,10 +1,10 @@
 mod game;
 mod tile;
 
-use rand::{random, Rng};
+use crate::game::Game;
 
 fn main() {
-    let x = rand::thread_rng().gen_range(0..=100);
+    let game = Game::new();
 
-    println!("{x}");
+    game.play();
 }
