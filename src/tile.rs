@@ -18,8 +18,14 @@ impl Tile {
         }
     }
 
+    pub fn is_ship(self) -> bool { self.is_ship }
+
     pub fn set_as_ship(&mut self) {
         self.is_ship = true;
+    }
+
+    pub fn reveal(&mut self) {
+        self.is_hidden = false;
     }
 }
 

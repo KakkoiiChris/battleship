@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter};
+use std::io::{stdin, stdout, Write};
 
 use rand::Rng;
 
@@ -7,6 +8,7 @@ use crate::tile::Tile;
 pub struct Game {
     board: [[Tile; 8]; 8],
     torpedoes: u8,
+    reveals: u8,
 }
 
 impl Game {
@@ -28,11 +30,59 @@ impl Game {
         Game {
             board,
             torpedoes: 20,
+            reveals: 0,
         }
     }
 
-    pub fn play(&self) {
-        println!("{self}");
+    pub fn play(&mut self) {
+        println!("<[BATTLESHIP]>");
+
+        loop {
+            println!("{self}");
+
+            let row = get_coord("Row");
+            let col = get_coord("Column");
+
+            self.board[row][col].reveal();
+
+            if self.board[row][col].is_ship() {
+                self.reveals += 1;
+            }
+
+            if self.reveals == 4 { break; }
+
+            self.torpedoes -= 1;
+
+            if self.torpedoes == 0 { break; }
+        }
+    }
+}
+
+fn get_coord(name: &str) -> usize {
+    loop {
+        print!("{name} > ");
+
+        let _ = stdout().flush();
+
+        let mut input = String::new();
+
+        match stdin().read_line(&mut input) {
+            Ok(_) => {}
+
+            Err(e) => {
+                println!("Input Error: {}", e);
+                continue;
+            }
+        }
+
+        match input.trim().parse::<usize>() {
+            Ok(num) => break num,
+
+            Err(e) => {
+                println!("{e}");
+                continue;
+            }
+        }
     }
 }
 
